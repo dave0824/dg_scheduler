@@ -50,7 +50,7 @@
     </div>
 
     <div class="table-operator">
-      <a-button type="primary" icon="plus" @click="add()">新建</a-button>
+      <a-button type="primary" icon="plus" @click="add2()">新建</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -394,6 +394,11 @@ export default {
     // 悬浮框方法
     add () {
       this.visible = true
+    },
+    add2 (){
+      this.$router.push({
+        path: '/scheduler/newJobTaskMapp4',
+      })
     },
     handleSubmit () {
       const { form: { validateFields } } = this

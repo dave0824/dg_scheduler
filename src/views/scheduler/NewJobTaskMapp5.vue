@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div class="mainDiv">
     <!--<h2>任务执行流程</h2>-->
     <div class="leftDiv">
-      <h3>任务列表</h3>
+      <div class="font1">
+        <a-icon type="tags" />
+        <b>TASK信息</b>
+      </div>
       <div
         class="container"
-        draggable="false"
-        @dragover="onDragover($event)"
-        @drop="onDrop2($event)">
+        draggable="false">
+        <a-input class="input1" placeholder="请输入Task名称"></a-input>
         <a-button
           class="drag-content"
           v-for="(item,cindex) in group"
@@ -21,15 +23,18 @@
       </div>
     </div>
     <div class="rightDiv">
-      <h3>任务执行流程</h3>
+      <div class="font2">
+        <a-icon type="coffee" />
+        <b>TASK信息配置图</b>
+      </div>
       <div
         class="onDown"
         draggable="false"
         @dragover="onDragover($event)"
         @dragenter="onDragenter($event)"
         @drop="onDrop($event)">
-        <a-button @click="lastStep()">哥哥按我撤销</a-button>
-        <a-button @click="clear()">哥哥按我清空</a-button>
+        <a-button @click="lastStep()">撤销</a-button>
+        <a-button @click="clear()">清空</a-button>
         <a-button class="submit" @click="submit()">提交</a-button>
         <div id="mountNode"></div>
       </div>
@@ -52,29 +57,9 @@
         // G6
         initData: {
           // 点集
-          nodes: [
-            /*{
-              id: '99', // 节点的唯一标识
-              x: 200,      // 节点横坐标
-              y: 100,      // 节点纵坐标
-              label: '起始点' // 节点文本
-            },
-            {
-              id: '100',
-              x: 300,
-              y: 200,
-              label: '目标点'
-            }*/
-          ],
+          nodes: [],
           // 边集
-          edges: [
-            // 表示一条从 node1 节点连接到 node2 节点的边
-            /* {
-               source: '99',  // 起始点 id
-               target: '100',  // 目标点 id
-               label: ''   // 边的文本
-             }*/
-          ]
+          edges: []
         },
         group: [
           { id: '1', name: '任务1' },
@@ -109,9 +94,7 @@
         event.target.appendChild(this.childNode);
       },
       onDrop(event) {
-        /*event.target.appendChild(this.childNode);*/
         this.initData.nodes.push({
-          /*  id: 100+ (this.cnt)++ + '', // 节点的唯一标识*/
             id: this.childNode.id,
             x: event.offsetX,      // 节点横坐标
             y: event.offsetY,      // 节点纵坐标
@@ -123,11 +106,10 @@
         var tempY = 9999;
         if(this.initData.nodes.length >= 2){
 
-         /* var id = this. initData.nodes[this.cnt - 3].id ;*/
           var id = this.initData.nodes[this.initData.nodes.length-2].id;
           for(var i=this.initData.nodes.length - 2; i>=0;i--){
             var disX = Math.abs(event.offsetX - this.initData.nodes[i].x);// 记录新结点x值和每个结点的X值得差的绝对
-            if(disX < 45 ) { // 如果差值的绝对值小于45就退出循环
+            if(disX < 180 ) { // 如果差值的绝对值小于45就退出循环
               id = this.initData.nodes[i].id;
               break;
             }
@@ -140,7 +122,10 @@
           this.initData.edges.push({
             source: id,  // 起始点 id
             target: this.initData.nodes[this.initData.nodes.length-1].id,  // 目标点 id
-            label: ''   // 边的文本
+            label: '' ,  // 边的文本
+            style: {
+              endArrow: true
+            }
           });
         }
         this.childNode.disabled = true;
@@ -157,10 +142,10 @@
           /*fitView: true,*/
           defaultNode: {
             shape: 'rect',
-            size: [ 45, 30 ],
+            size: [ 180, 30 ],
             style: {
               fill: 'steelblue',   // 节点填充色
-              stroke: '#666',      // 节点描边色
+              stroke: '#fff',      // 节点描边色
               lineWidth: 1         // 节点描边粗细
             },
             // 节点上的标签文本配置
@@ -171,9 +156,10 @@
               }
             }
           },
-          width: 400,             // 图的宽度
-          height: 680             // 图的高度
+          width: 700,             // 图的宽度
+          height: 550            // 图的高度
         });
+
         graph.data(this.initData) // 加载数据
         graph.render()     // 渲染
         this.graph = graph;
@@ -197,14 +183,6 @@
           this.initData.nodes.splice(this.initData.nodes.length-1,1);// 删除最后一个结点
           this.reRender();// 重新渲染
         }
-        /*/!*遍历数组，然后根据选中的状态获取对应的下标，然后进行删除*!/
-        for (let i = 0; i < this.data.length; i++) {
-          let obj = this.data[i];
-          if (obj.isDelete) {
-            this.data.splice(i, 1);
-            i--
-          }
-        }*/
       },
       // 清空
       clear(){
@@ -218,6 +196,7 @@
       },
       // 提交
       submit(){
+        this.jobTaskList = [];
         for(let i=0;i<this.initData.nodes.length;i++){
           this.jobTaskList.push({
             id: this.initData.nodes[i].id,
@@ -225,6 +204,8 @@
           });
         }
         console.log(this.jobTaskList);
+        this.clear();
+        alert("提交成功！");
       }
     },
     mounted(){
@@ -233,32 +214,53 @@
   }
 </script>
 <style lang="stylus">
+  .mainDiv{
+    background white
+  }
   .drag-content{
+    width 180px
     background #13c2c2
+    margin 5px auto
+    margin-left 5px
+  }
+  .input1{
+    width 180px
+    margin 5px auto
+    margin-left 5px
+  }
+  b{
+    margin-left 5px
+  }
+  .font1{
+      width 200px
+      height 30px
+      background #CCF5FF
+    }
+  .font2{
+    width 740px
+    height 30px
+    background #CCF5FF
   }
   .container{
-    width 400px
-    height 750px
-    border 1px solid #1890ff
+    width 200px
+    height 600px
+    border 1px solid #C9BBFF
   }
   .onDown{
-    width 400px
-    height 750px
-    border 1px solid #1890ff
-    /*float: left
-    margin : 0.25in*/
-  }
-  .submit{
-    float: left
-    margin : -30px 0px 0px 340px
+    width 740px
+    height 600px
+    border 1px solid #C9BBFF
+    text-align:right
   }
   .leftDiv{
     float: left
-    margin : 0.25in
+    margin : 0.05in
+    border 1px solid #C9BBFF
   }
   .rightDiv{
     float: left
-    margin : 0.25in
+    margin : 0.05in
+    border 1px solid #C9BBFF
   }
 
 </style>

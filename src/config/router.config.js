@@ -319,17 +319,23 @@ export const asyncRouterMap = [
             component: () => import('@/views/scheduler/NewJobTaskMapp2'),
             meta: { title: '新建任务与作业关系2', keepAlive: true }
           },*/
-          {
+          /*{
             path: '/scheduler/newJobTaskMapp3',
             name: 'NewJobTaskMapp3',
             component: () => import('@/views/scheduler/NewJobTaskMapp3'),
             meta: { title: '新建任务与作业关系', keepAlive: true }
-          },
-          {
+          },*/
+          /*{
             path: '/scheduler/newJobTaskMapp4',
             name: 'NewJobTaskMapp4',
             component: () => import('@/views/scheduler/NewJobTaskMapp4'),
-            meta: { title: '新建任务与作业关系4', keepAlive: true }
+            meta: { title: '新建任务与作业关系', keepAlive: true }
+          },*/
+          {
+            path: '/scheduler/newJobTaskMapp5',
+            name: 'NewJobTaskMapp5',
+            component: () => import('@/views/scheduler/NewJobTaskMapp5'),
+            meta: { title: 'Task信息配置', keepAlive: true }
           }
         ]
       },

@@ -307,36 +307,12 @@ export const asyncRouterMap = [
             component: () => import('@/views/scheduler/JobTaskMapp'),
             meta: { title: '任务与作业映射表', keepAlive: true }
           },
-          /*{
+          {
             path: '/scheduler/newJobTaskMapp',
             name: 'NewJobTaskMapp',
             component: () => import('@/views/scheduler/NewJobTaskMapp'),
-            meta: { title: '新建任务与作业关系', keepAlive: true }
-          },
-          {
-            path: '/scheduler/newJobTaskMapp2',
-            name: 'NewJobTaskMapp2',
-            component: () => import('@/views/scheduler/NewJobTaskMapp2'),
-            meta: { title: '新建任务与作业关系2', keepAlive: true }
-          },*/
-          /*{
-            path: '/scheduler/newJobTaskMapp3',
-            name: 'NewJobTaskMapp3',
-            component: () => import('@/views/scheduler/NewJobTaskMapp3'),
-            meta: { title: '新建任务与作业关系', keepAlive: true }
-          },*/
-          /*{
-            path: '/scheduler/newJobTaskMapp4',
-            name: 'NewJobTaskMapp4',
-            component: () => import('@/views/scheduler/NewJobTaskMapp4'),
-            meta: { title: '新建任务与作业关系', keepAlive: true }
-          },*/
-          {
-            path: '/scheduler/newJobTaskMapp5',
-            name: 'NewJobTaskMapp5',
-            component: () => import('@/views/scheduler/NewJobTaskMapp5'),
             meta: { title: 'Task信息配置', keepAlive: true }
-          }
+          },
         ]
       },
 
@@ -348,6 +324,72 @@ export const asyncRouterMap = [
         meta: { title: '测试', icon: 'slack', permission: ['dashboard'] },
         redirect: '/test/test',
         children: [
+          /*{
+           path: '/test/newJobTaskMapp',
+           name: 'NewJobTaskMapp',
+           component: () => import('@/views/test/NewJobTaskMapp'),
+           meta: { title: '新建任务与作业关系', keepAlive: true }
+         },
+         {
+           path: '/test/newJobTaskMapp2',
+           name: 'NewJobTaskMapp2',
+           component: () => import('@/views/test/NewJobTaskMapp2'),
+           meta: { title: '新建任务与作业关系2', keepAlive: true }
+         },*/
+          /*{
+            path: '/test/newJobTaskMapp3',
+            name: 'NewJobTaskMapp3',
+            component: () => import('@/views/test/NewJobTaskMapp3'),
+            meta: { title: '新建任务与作业关系', keepAlive: true }
+          },*/
+          /*{
+            path: '/test/newJobTaskMapp4',
+            name: 'NewJobTaskMapp4',
+            component: () => import('@/views/test/NewJobTaskMapp4'),
+            meta: { title: '新建任务与作业关系', keepAlive: true }
+          },*/
+          {
+            path: '/test/newJobTaskMapp5',
+            name: 'NewJobTaskMapp5',
+            component: () => import('@/views/test/NewJobTaskMapp5'),
+            meta: { title: 'Task信息配置', keepAlive: true }
+          },
+          {
+            path: '/test/newJobTaskMapp6',
+            name: 'NewJobTaskMapp6',
+            component: () => import('@/views/test/NewJobTaskMapp6'),
+            meta: { title: 'Task信息配置6', keepAlive: true }
+          },
+          {
+            path: '/test/newJobTaskMapp7',
+            name: 'NewJobTaskMapp7',
+            component: () => import('@/views/test/NewJobTaskMapp7'),
+            meta: { title: 'Task信息配置7', keepAlive: true }
+          },
+          {
+            path: '/test/newJobTaskMapp8',
+            name: 'NewJobTaskMapp8',
+            component: () => import('@/views/test/NewJobTaskMapp8'),
+            meta: { title: 'Task信息配置8', keepAlive: true }
+          },
+          {
+            path: '/test/newJobTaskMapp9',
+            name: 'NewJobTaskMapp9',
+            component: () => import('@/views/test/NewJobTaskMapp9'),
+            meta: { title: 'Task信息配置9', keepAlive: true }
+          },
+          {
+            path: '/test/newJobTaskMapp10',
+            name: 'NewJobTaskMapp10',
+            component: () => import('@/views/test/NewJobTaskMapp10'),
+            meta: { title: 'Task信息配置10', keepAlive: true }
+          },
+          {
+            path: '/test/newJobTaskMapp11',
+            name: 'NewJobTaskMapp11',
+            component: () => import('@/views/test/NewJobTaskMapp11'),
+            meta: { title: 'Task信息配置11', keepAlive: true }
+          },
           {
             path: '/test/test',
             name: 'Test',

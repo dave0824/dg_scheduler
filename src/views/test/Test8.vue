@@ -44,7 +44,11 @@
         const graph = new G6.Graph({
           container: 'mountNode', // 指定挂载容器
           width: 800,             // 图的宽度
-          height: 500             // 图的高度
+          height: 500,             // 图的高度
+          modes: {
+            // 默认交互模式
+            default: ['drag-node', 'click-select'],
+          }
         })
         graph.data(this.initData) // 加载数据
         graph.render()     // 渲染

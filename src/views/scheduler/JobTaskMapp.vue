@@ -397,7 +397,7 @@ export default {
     },
     add2 (){
       this.$router.push({
-        path: '/scheduler/newJobTaskMapp4',
+        path: '/scheduler/newJobTaskMapp',
       })
     },
     handleSubmit () {

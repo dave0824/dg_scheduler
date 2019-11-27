@@ -15,7 +15,6 @@
           v-for="(item,cindex) in group"
           :key="cindex"
           draggable="true"
-          :disabled=item.disable
           @dragstart="onDragstart($event)"
           @dragend="onDragend($event)"
           :id="item.id">
@@ -37,6 +36,7 @@
         <a-button @click="lastStep()">撤销</a-button>
         <a-button @click="clear()">清空</a-button>
         <a-button class="submit" @click="submit()">提交</a-button>
+        <a-button @click="setDisabled()">失效</a-button>
         <div id="mountNode"></div>
       </div>
     </div>
@@ -159,14 +159,14 @@
           edges: []
         },
         group: [
-          { id: '1', name: '任务1' ,disable: false},
-          { id: '2', name: '任务2' ,disable: false},
-          { id: '3', name: '任务3' ,disable: false},
-          { id: '4', name: '任务4' ,disable: false},
-          { id: '5', name: '任务5' ,disable: false},
-          { id: '6', name: '任务6' ,disable: false},
-          { id: '7', name: '任务7' ,disable: false},
-          { id: '8', name: '任务8' ,disable: false}
+          { id: '1', name: '任务1' },
+          { id: '2', name: '任务2' },
+          { id: '3', name: '任务3' },
+          { id: '4', name: '任务4' },
+          { id: '5', name: '任务5' },
+          { id: '6', name: '任务6' },
+          { id: '7', name: '任务7' },
+          { id: '8', name: '任务8' }
         ],
       }
     },
@@ -217,13 +217,7 @@
             }
           });
         }
-        // this.childNode.disabled = true; // 设置标签为不可用
-        for(var i=0;i<this.group.length;i++){// 设置被选中的标签为不可用
-          if(this.group[i].id === this.childNode.id){
-            this.group[i].disable = true;
-            break;
-          }
-        }
+        this.childNode.disabled = true; // 设置标签为不可用
         this.reRender(); // 重新渲染
       },
       onDragover(event) {
@@ -315,22 +309,16 @@
               this.initData.edges.splice(i,1);
             }
           }
-
-          for(var i=0;i<this.group.length;i++){// 将最后一个结点对应的标签设置为false
-            if(this.group[i].id === this.initData.nodes[this.initData.nodes.length-1].id){ // 如果id和最后一个结点的id相同，那么就将这个对象的disable属性设置为false
-              this.group[i].disable = false;
-              break;
-            }
-          }
-
+          document.getElementById(this.initData.nodes[this.initData.nodes.length-1].id).disabled = false;// 将最后一个结点对应的标签设置为false
           this.initData.nodes.splice(this.initData.nodes.length-1,1);// 删除最后一个结点
           this.reRender();// 重新渲染
         }
       },
       // 清空
       clear(){
-        for(var i=0;i<this.group.length;i++){// 将所有标签disabled属性设置为false
-            this.group[i].disable = false;
+        var len = document.getElementsByClassName("drag-content").length;
+        for(var i=0;i<len;i++){// 将所有标签disabled属性设置为false
+          document.getElementsByClassName("drag-content")[i].disabled = false;
         }
         this.initData.edges = [];
         this.initData.nodes = [];
@@ -340,8 +328,20 @@
       // 悬浮窗取消
       handleCancel () {
         this.visible = false
+        this.setDisabled()
       },
+      //将刷新的标签重新设置为失效
+      setDisabled(){
+        for(var i = 0;i < this.initData.nodes.length; i++){
 
+          document.getElementById(this.initData.nodes[i].id).disabled = "disabled";
+
+          /*document.getElementById(this.initData.nodes[i].id).setAttribute("disabled","disabled");*/
+          console.log(i);
+          console.log(document.getElementById(this.initData.nodes[i].id));
+          console.log(document.getElementById(this.initData.nodes[i].id).disabled);
+        }
+      },
       show(){
         this.visible = true;
       },
@@ -356,6 +356,7 @@
           console.log(res);
         });
         this.visible = false;
+        this.setDisabled()
       },
 
       // 加载标签数据
@@ -367,10 +368,6 @@
           .catch(function (error) {
             console.log(error);
           });
-
-        for(var i=0; i<this.group.length;i++){ // 添加disable属性并设置为false
-          this.$set(this.group[i], 'disable', 'false')
-        }
       },
 
       // 根据标签id查找标签详细信息

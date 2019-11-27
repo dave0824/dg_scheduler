@@ -15,7 +15,6 @@
           v-for="(item,cindex) in group"
           :key="cindex"
           draggable="true"
-          :disabled=item.disable
           @dragstart="onDragstart($event)"
           @dragend="onDragend($event)"
           :id="item.id">
@@ -37,6 +36,7 @@
         <a-button @click="lastStep()">撤销</a-button>
         <a-button @click="clear()">清空</a-button>
         <a-button class="submit" @click="submit()">提交</a-button>
+        <a-button @click="setDisabled()">失效</a-button>
         <div id="mountNode"></div>
       </div>
     </div>
@@ -57,56 +57,56 @@
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskId"/>
+            <a-input v-model="createForm.taskId"/>
           </a-form-item>
           <a-form-item
             label="任务编码"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskCode"/>
+            <a-input v-model="createForm.taskCode"/>
           </a-form-item>
           <a-form-item
             label="任务应用名"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskAppName"/>
+            <a-input v-model="createForm.taskAppName"/>
           </a-form-item>
           <a-form-item
             label="任务组编码"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskGroupCode"/>
+            <a-input v-model="createForm.taskGroupCode"/>
           </a-form-item>
           <a-form-item
             label="任务路径"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskPath"/>
+            <a-input v-model="createForm.taskPath"/>
           </a-form-item>
           <a-form-item
             label="任务方法"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskMethod"/>
+            <a-input v-model="createForm.taskMethod"/>
           </a-form-item>
           <a-form-item
             label="任务方式"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-input v-model="detailForm.taskCategory"/>
+            <a-input v-model="createForm.taskCategory"/>
           </a-form-item>
           <a-form-item
             label="是否分配"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol"
           >
-            <a-radio-group v-model="detailForm.isAssignment">
+            <a-radio-group v-model="createForm.isAssignment">
               <a-radio  value="1">是</a-radio>
               <a-radio  value="0">否</a-radio>
             </a-radio-group>
@@ -121,7 +121,7 @@
   import G6 from '@antv/g6'
   export default{
     components: {
-      G6,
+      G6
     },
     data(){
       return{
@@ -137,7 +137,7 @@
           sm: { span: 13 }
         },
         // 悬浮框参数
-        detailForm: {
+        createForm: {
           taskId: '',
           taskCode: '123',
           taskAppName: 'appName',
@@ -159,21 +159,26 @@
           edges: []
         },
         group: [
-          { id: '1', name: '任务1' ,disable: false},
-          { id: '2', name: '任务2' ,disable: false},
-          { id: '3', name: '任务3' ,disable: false},
-          { id: '4', name: '任务4' ,disable: false},
-          { id: '5', name: '任务5' ,disable: false},
-          { id: '6', name: '任务6' ,disable: false},
-          { id: '7', name: '任务7' ,disable: false},
-          { id: '8', name: '任务8' ,disable: false}
+          { id: '1', name: '任务1' },
+          { id: '2', name: '任务2' },
+          { id: '3', name: '任务3' },
+          { id: '4', name: '任务4' },
+          { id: '5', name: '任务5' },
+          { id: '6', name: '任务6' },
+          { id: '7', name: '任务7' },
+          { id: '8', name: '任务8' }
         ],
+        loadData: () => {
+          return this.$http.get('/service').then(res => {
+            return res.result
+          })
+        },
       }
     },
     methods: {
       onDragstart(event) {
         this.childNode=event.target;
-        // console.log(this.childNode);
+        console.log(this.childNode);
       },
       onDragend(event) {
 
@@ -182,17 +187,21 @@
       onDragenter($event){
         event.preventDefault();
       },
+      onDrop2(event){
+        event.target.appendChild(this.childNode);
+      },
       onDrop(event) {
-        this.initData.nodes.push({ // 当拖拽元素放下时添加节点
-            id: this.childNode.id,  // 结点id
+        this.initData.nodes.push({
+            id: this.childNode.id,
             x: event.offsetX - 90,      // 节点横坐标
             y: event.offsetY,      // 节点纵坐标
             label: this.childNode.innerText,// 节点文本
           }
         );
 
+        console.log(this.childNode.id);
         var tempY = 9999;
-        if(this.initData.nodes.length >= 2){ // 当节点数大于等于2时开始加边
+        if(this.initData.nodes.length >= 2){
 
           var id = this.initData.nodes[this.initData.nodes.length-2].id;
           for(var i=this.initData.nodes.length - 2; i>=0;i--){
@@ -207,23 +216,17 @@
               id = this.initData.nodes[i].id;
             }
           }
-
           this.initData.edges.push({
             source: id,  // 起始点 id
             target: this.initData.nodes[this.initData.nodes.length-1].id,  // 目标点 id
             label: '' ,  // 边的文本
             style: {
-              endArrow: true // 添加边结尾箭头
+              endArrow: true
             }
           });
+          id='';
         }
-        // this.childNode.disabled = true; // 设置标签为不可用
-        for(var i=0;i<this.group.length;i++){// 设置被选中的标签为不可用
-          if(this.group[i].id === this.childNode.id){
-            this.group[i].disable = true;
-            break;
-          }
-        }
+        this.childNode.disabled = true;
         this.reRender(); // 重新渲染
       },
       onDragover(event) {
@@ -242,7 +245,7 @@
               attrs: style
             });
             // 绘制节点里面的图标。
-            var innerImage = group.addShape('image', {
+            var innerCircle = group.addShape('image', {
               attrs: {
                 x: 66,
                 y: -9,
@@ -253,13 +256,14 @@
               },
             });
             // 设置className属性
-            innerImage.set("className", "node-inner-image");
+            innerCircle.set("className", "node-inner-circle");
             return shape;
           }
         }, "rect");
 
         const graph = new G6.Graph({
           container: 'mountNode', // 指定挂载容器
+          /*fitView: true,*/
           defaultNode: {
             shape: 'customNode',
             size: [ 180, 30 ],
@@ -288,14 +292,12 @@
      onclicks(this2){
         this.graph.on("node:click", function(event) {
           var shape = event.target;
-          if (shape.get("className") === "node-inner-image") {
-            // 如果点击是发生在节点里面的图片上，显示悬浮框
-             this2.detailForm.taskId = event.item._cfg.id;// 记录标签传来的id
-            // 通过id加载task详细信息
-            //this.findTaskById(event.item._cfg.id);
-             this2.show() // 显示悬浮框
+          if (shape.get("className") === "node-inner-circle") {
+            // 如果点击是发生在节点里面的小圆上，显示悬浮框
+             this2.createForm.taskId = event.item._cfg.id;
+             this2.show()
           } else {
-            // 否则隐藏悬浮框
+            // 否则隐藏tooltip
 
           }
        });
@@ -315,109 +317,75 @@
               this.initData.edges.splice(i,1);
             }
           }
-
-          for(var i=0;i<this.group.length;i++){// 将最后一个结点对应的标签设置为false
-            if(this.group[i].id === this.initData.nodes[this.initData.nodes.length-1].id){ // 如果id和最后一个结点的id相同，那么就将这个对象的disable属性设置为false
-              this.group[i].disable = false;
-              break;
-            }
-          }
-
+          document.getElementById(this.initData.nodes[this.initData.nodes.length-1].id).disabled = false;// 将最后一个结点对应的标签设置为false
           this.initData.nodes.splice(this.initData.nodes.length-1,1);// 删除最后一个结点
           this.reRender();// 重新渲染
         }
       },
       // 清空
       clear(){
-        for(var i=0;i<this.group.length;i++){// 将所有标签disabled属性设置为false
-            this.group[i].disable = false;
+        var len = document.getElementsByClassName("drag-content").length;
+        for(var i=0;i<len;i++){// 将所有标签disabled属性设置为false
+          document.getElementsByClassName("drag-content")[i].disabled = false;
         }
         this.initData.edges = [];
         this.initData.nodes = [];
         this.reRender();// 重新渲染
       },
-
-      // 悬浮窗取消
-      handleCancel () {
-        this.visible = false
-      },
-
-      show(){
-        this.visible = true;
-      },
-
-      // 提交修改的task数据
-      handleSubmit () {
-        this.axios({
-          method: 'post',
-          url:'/task/update',
-          data:this.qs.stringify(this.detailForm),
-        }).then((res)=>{
-          console.log(res);
-        });
-        this.visible = false;
-      },
-
-      // 加载标签数据
-      loadData: () => {
-        this.axios.get('/task/findAll')
-          .then(function (response) {
-            this.group = response.result;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
-        for(var i=0; i<this.group.length;i++){ // 添加disable属性并设置为false
-          this.$set(this.group[i], 'disable', 'false')
-        }
-      },
-
-      // 根据标签id查找标签详细信息
-      findTaskById: (id) => {
-        this.axios.get('/task/findById',{
-          params:{
-            id: id
-          }
-        })
-          .then(function (response) {
-            this.detailForm = response.result;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      },
-
       // 提交
       submit(){
         this.jobTaskList = [];
-        for(let i=0;i<this.initData.nodes.length;i++){ // 获取提交的任务id和name以及执行顺序
+        for(let i=0;i<this.initData.nodes.length;i++){
           this.jobTaskList.push({
             id: this.initData.nodes[i].id,
             name: this.initData.nodes[i].label
           });
         }
         console.log(this.jobTaskList);
-        // 提交数据
-        // this.sendSubmitData();
         this.clear();
         alert("提交成功！");
       },
 
-      // 发送提交数据
-      sendSubmitData(){
-        this.axios({
-          method: 'post',
-          url:'/job/add',
-          data:this.qs.stringify(this.jobTaskList),
-        }).then((res)=>{
-          console.log(res);
-        });
+      // 悬浮窗取消
+      handleCancel () {
+        this.setDisabled()
+        this.visible = false
+
+      },
+      //将刷新的标签重新设置为失效
+      setDisabled(){
+        for(var i = 0;i < this.initData.nodes.length; i++){
+          document.getElementById(this.initData.nodes[i].id).disabled = "disabled";
+          /*document.getElementById(this.initData.nodes[i].id).setAttribute("disabled","disabled");*/
+          console.log(i);
+          console.log(document.getElementById(this.initData.nodes[i].id));
+          console.log(document.getElementById(this.initData.nodes[i].id).disabled);
+        }
+      },
+      show(){
+        this.visible = true;
+      },
+      handleSubmit () {
+        const { form: { validateFields } } = this
+        this.confirmLoading = true
+        validateFields((errors, values) => {
+          if (!errors) {
+            console.log('values', values)
+            setTimeout(() => {
+              this.visible = false
+              this.confirmLoading = false
+              this.$emit('ok', values)
+            }, 1500)
+          } else {
+            this.confirmLoading = false
+          }
+        })
+
+        this.setDisabled()
       }
     },
     mounted(){
       this.init();
-      // this.loadData();
     }
   }
 </script>
@@ -469,6 +437,14 @@
     float: left
     margin : 0.05in
     border 1px solid #C9BBFF
+  }
+  // 新增
+  #graph-container canvas {
+    border: 1px solid #ccc;
+  }
+  .node-event-demo  .header {
+    font-size: 14px;
+    margin: 10px 0;
   }
 
 </style>

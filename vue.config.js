@@ -30,7 +30,9 @@ const prodExternals = {
   vue: 'Vue',
   'vue-router': 'VueRouter',
   vuex: 'Vuex',
-  axios: 'axios'
+  axios: 'axios',
+  jquery: 'jquery',
+  $: 'jquery'
 }
 
 // vue.config.js

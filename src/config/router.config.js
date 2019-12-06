@@ -453,6 +453,40 @@ export const asyncRouterMap = [
         ]
       },
 
+      {
+        path: '/testJsPlumb',
+        name: 'testJsPlumb',
+        component: PageView,
+        meta: { title: '测试图', icon: 'slack', permission: ['dashboard'] },
+        redirect: '/testJsPlumb/test1',
+        children: [
+          {
+            path: '/testJsPlumb/test1',
+            name: 'Test1',
+            component: () => import('@/views/testJsPlumb/Test1'),
+            meta: { title: '测试', keepAlive: true }
+          },
+         {
+            path: '/testJsPlumb/test2',
+            name: 'T2',
+            component: () => import('@/views/testJsPlumb/Test2'),
+            meta: { title: '测试2', keepAlive: true }
+          },
+          {
+            path: '/testJsPlumb/test3',
+            name: 'T3',
+            component: () => import('@/views/testJsPlumb/Test3'),
+            meta: { title: '测试3', keepAlive: true }
+          },
+          {
+            path: '/testJsPlumb/test4',
+            name: 'T4',
+            component: () => import('@/views/testJsPlumb/Test4'),
+            meta: { title: '测试4', keepAlive: true }
+          }
+        ]
+      },
+
       // other
       {
         path: '/other',

@@ -197,23 +197,6 @@
           ConnectionsDetachable: true,
           /*ReattachConnections: true  //连线不可断开*/
         });
-        //点击连线事件
-       /* instance.bind("click", function (conn, originalEvent) {
-        });
-        instance.bind("connectionDrag", function (connection) {
-          debugger
-          console.log("connection " + connection.id + " is being dragged. suspendedElement is ", connection.suspendedElement, " of type ", connection.suspendedElementType);
-        });
-
-        instance.bind("connectionDragStop", function (connection) {
-          debugger
-          console.log("connection " + connection.id + " was dragged");
-        });
-
-        instance.bind("connectionMoved", function (params) {
-          debugger
-          console.log("connection " + params.connection.id + " was moved");
-        });*/
 
         this.instance = instance;// 记录实例
 
@@ -269,23 +252,6 @@
         };
         this.endCircle = endCircle;// 保存终点样式
 
-
-          /**
-           * 设置左边任务表单
-           * @param Data
-           */
-       /*   console.log("1111111111")
-          //拖拽设置
-          $("#leftTask a-button").draggable({
-            helper: "clone",
-            scope: "plant"
-          });
-          $("#container").droppable({
-            scope: "plant",
-            drop: function(event, ui) {
-              this.CreateModel(ui, $(this));
-            }
-          });*/
       },
 
       onDragstart(event) {
@@ -329,15 +295,12 @@
         // 设置位置属性
         var left = event.pageX - 90;
         var top =  event.pageY - 18;
-        console.log(left);
-        console.log(top);
         div.css({position: "absolute"});
         div.css("top",top);
         div.css("left",left);
 
         // 添加查看详情图标并设置点击事件
-        // var img = $('<img id="edit-img" class="atlas" src="https://gw.alipayobjects.com/zos/basement_prod/4f81893c-1806-4de4-aff3-9a6b266bc8a2.svg" >');// 在div内部添加图片
-        var img = $('<img id="edit-img" class="atlas" >');// 在div内部添加图片
+        var img = $('<img id="edit-img" >');// 在div内部添加图片
         img.attr("src",_this.editImgUrl)
         img.click(function() {
           _this.detailForm.taskId = taskId;
@@ -347,11 +310,8 @@
         div.append(img);
 
         // 添加删除按钮和事件
-        // var del = $('<div>x<div>');
-/*
-        var del = $('<img id="delete-img" class="atlas" src="https://gw.alipayobjects.com/zos/basement_prod/4f81893c-1806-4de4-aff3-9a6b266bc8a2.svg" >');// 在div内部添加图片
-*/
-        var del = $('<img id="delete-img" class="atlas" >');// 在div内部添加图片
+
+        var del = $('<img id="delete-img" >');// 在div内部添加图片
         del.attr("src",_this.imgUrl)
         del.click(function() {
           _this.removeElement(id,taskId);
@@ -360,17 +320,11 @@
 
 
         $("#container").append(div);
-        //console.log("到我了了了了了")
-        console.log(this.instance);
-       // console.log('---------------')
-        //console.log(this.endCircle)
-        //console.log(id)
-        //console.log($('#'+id).attr("id"))
+
         // 添加连接点
         this.instance.addEndpoint(id, this.endCircle);
         this.instance.addEndpoint(id, this.startCircle);
 
-        //var _this = this;
         //注册实体可draggable
         $("#" + id).draggable({
           containment: "parent",
@@ -564,20 +518,21 @@
   .newPoint{
     width 180px
     height 36px
-    background '#f0f5ff'
-    border 1px solid #C9BBFF
+    border:1px solid #96C2F1;
+    border-radius 20px
+    background-color: #EFF7FF
     text-align:center
     line-height 36px
   }
 
   #edit-img{
-    margin-left 60 px
+    margin-left 50 px
     margin-top   -2px
     cursor:pointer
   }
 
   #delete-img{
-    margin-left 150 px
+    margin-left 140 px
     margin-top   -75px
     cursor:pointer
   }

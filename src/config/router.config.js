@@ -313,6 +313,12 @@ export const asyncRouterMap = [
             component: () => import('@/views/scheduler/NewJobTaskMapp'),
             meta: { title: 'Task信息配置', keepAlive: true }
           },
+          {
+            path: '/scheduler/newJobTaskMapp2',
+            name: 'NewJobTaskMapp2',
+            component: () => import('@/views/scheduler/NewJobTaskMapp2'),
+            meta: { title: 'Task信息配置2', keepAlive: true }
+          },
         ]
       },
 

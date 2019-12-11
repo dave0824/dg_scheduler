@@ -9,14 +9,14 @@
       <div
         id="leftTask"
         class="container">
-        <a-input class="input1" placeholder="请输入Task名称"></a-input>
+        <input class="input1" placeholder="请输入Task名称" />
         <a-button
           class="drag-content"
           draggable="true"
           :disabled=item.disable
           @dragstart="onDragstart($event)"
           @dragend="onDragend($event)"
-          v-for="(item,cindex) in group"
+          v-for="(item,cindex) in tempTask"
           :key="cindex"
           :id="item.id">
           {{item.name}}
@@ -167,8 +167,10 @@
           { id: '5', name: '任务5' ,disable: false},
           { id: '6', name: '任务6' ,disable: false},
           { id: '7', name: '任务7' ,disable: false},
-          { id: '8', name: '任务8' ,disable: false}
+          { id: '8', name: '任务8' ,disable: false},
+          { id: '9', name: '任务9' ,disable: false}
         ],
+        tempTask:[] // 临时存放任务数组
       }
     },
     methods:{
@@ -402,8 +404,45 @@
         for(var i=0; i<this.group.length;i++){ // 添加disable属性并设置为false
           this.$set(this.group[i], 'disable', 'false')
         }
+
+        this.tempTask = this.group; // 记录group数组
       },
 
+      // 检测文本框变化模糊查询
+      /*likeFindByName(){
+        var _this = this;
+        $('.input1').on('input propertychange keydown change', function() {
+          var self = this;
+          setTimeout(function() {
+            /!*$(self).next().find('.show').text($(self).val());*!/
+            _this.tempTask = [];
+            console.log(11111111111);
+            var temp = $(self).val();
+            console.log("temp ="+ temp);
+            for(var i=0;i<_this.group.length;i++){
+              if(_this.group[i].name.indexOf(temp)>=0){
+                _this.tempTask.push(_this.group[i]);
+              }
+
+            }
+          },100)
+        });
+
+      },*/
+      likeFindByName(){
+        var _this = this;
+        $('.input1').on('input propertychange', function() {
+            /*$(self).next().find('.show').text($(self).val());*/
+            _this.tempTask = [];
+            var temp = $(this).val();
+            for(var i=0;i<_this.group.length;i++){
+              if(_this.group[i].name.indexOf(temp)>=0){
+                _this.tempTask.push(_this.group[i]);
+              }
+            }
+        });
+
+      },
       // 根据标签id查找标签详细信息
       findTaskById: (id) => {
         this.axios.get('/task/findById',{
@@ -452,7 +491,9 @@
     },
     mounted(){
       this.init();
+      this.tempTask = this.group;
       // this.loadData();
+      this.likeFindByName();
     },
 
   }
@@ -500,9 +541,6 @@
     border 1px solid #C9BBFF
     text-align:right
   }
-    #container{
-
-    }
   .leftDiv{
     float: left
     margin : 0.05in
@@ -535,6 +573,36 @@
     margin-left 140 px
     margin-top   -75px
     cursor:pointer
+  }
+
+  input {
+    height: 32px;
+    width 180px
+    margin 5px auto
+    margin-left 5px
+    line-height: 20px;
+    font-size: 15px;
+    border: 1px solid #ccd3d5;
+    border-radius 4px
+    color: #777;
+    display: block;
+    background: #fff;
+    padding: 7px 10px;
+  }
+  input:focus, input.readonly {
+    background: #f7f8fa;
+    border: 1px solid #bcc6c8;
+    color: #556066;
+  }
+  textarea.input {
+    padding: 8px;
+    overflow: auto;
+    height: 100px;
+  }
+  input::-webkit-input-placeholder{
+    color:#CCCCCC
+    font-size 15px
+    text-align:center
   }
 
 </style>

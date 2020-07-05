@@ -118,13 +118,15 @@
 <script>
   import jsplumb from 'jsplumb'
   import  $ from "jquery"
+  import axios from "axios"
   import 'jquery-ui/ui/widgets/draggable'
   import 'jquery-ui/ui/widgets/droppable'
   import 'jquery-ui/ui/widgets/resizable'
   export default {
     name: 'test1',
     components: {
-      jsplumb
+      jsplumb,
+      axios
     },
     data(){
       return{
@@ -393,9 +395,10 @@
 
       // 加载标签数据
       loadData: () => {
-        this.axios.get('/task/findAll')
+        this.axios.get('http://httpbin.org/')
           .then(function (response) {
-            this.group = response.result;
+            console.log("啊啊啊啊"+ response);
+            //this.group = response.result;
           })
           .catch(function (error) {
             console.log(error);
@@ -463,6 +466,7 @@
         console.log(this.jobTaskList);
         // 提交数据
         // this.sendSubmitData();
+        this.loadData();
         this.jobTaskList = [];
         this.clear();
         alert("提交成功！");
